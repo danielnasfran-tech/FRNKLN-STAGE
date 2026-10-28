@@ -43,7 +43,7 @@ app.get(/^(?!\/api).*/, (req, res) => {
 
 app.use((err, req, res, next) => {
   if (err) {
-    console.error('[erro]', err.message);
+    console.error('[erro]', err.stack || err.message);
     return res.status(500).json({ error: 'server_error', message: 'Erro interno do servidor.' });
   }
   return next();
