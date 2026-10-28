@@ -149,7 +149,7 @@ function fieldValue(field, raw, nullable) {
   return clean(raw, field === 'logo' ? 300000 : 20000);
 }
 
-function readEntity(table, row) {
+function readEntity(row) {
   return {
     ...row,
     deleted: !!row.deleted,
