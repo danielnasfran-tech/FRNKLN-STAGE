@@ -470,5 +470,3 @@ async function waitForServer(timeoutMs = 20000) {
   }
   process.exit(0);
 })();
-
-const net = require('net');
