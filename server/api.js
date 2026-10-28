@@ -286,7 +286,7 @@ function entityRoute(key, cfg) {
     const cols = ['id', 'owner_id', ...cfg.fields, 'created_at', 'updated_at', 'version', 'deleted'];
     const values = [id, ownerId];
     for (const field of cfg.fields) {
-      values.push(req.body[field] === undefined ? null : clean(req.body[field], field === 'logo' ? 300000 : 20000));
+      values.push(fieldValue(field, req.body[field], cfg.nullable));
     }
     values.push(now, now, 1, 0);
     const placeholders = cols.map(() => '?').join(',');
