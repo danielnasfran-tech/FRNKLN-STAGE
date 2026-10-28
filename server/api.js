@@ -319,7 +319,7 @@ function entityRoute(key, cfg) {
     for (const field of cfg.fields) {
       if (req.body[field] === undefined) continue;
       sets.push(`${field} = ?`);
-      values.push(clean(req.body[field], field === 'logo' ? 300000 : 20000));
+      values.push(fieldValue(field, req.body[field], cfg.nullable));
     }
     sets.push('updated_at = ?', 'version = version + 1');
     values.push(nowIso(), id, ownerId);
