@@ -9,6 +9,7 @@ const os = require('os');
 const path = require('path');
 const assert = require('assert');
 const { spawn } = require('child_process');
+const net = require('net');
 
 const ROOT = path.join(__dirname, '..');
 const TMP_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'frnkln-test-'));
