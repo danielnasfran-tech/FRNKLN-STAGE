@@ -2207,6 +2207,15 @@
   currentRoute = parseHash();
   boot();
 
+  /* ------------------------------------------------- service worker (PWA) */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {
+        /* sem SW: o app continua funcionando online */
+      });
+    });
+  }
+
   // Expõe para testes automatizados
   window.__fnk = { state, api, actions, pending, flushPending, syncNow };
 })();
