@@ -1,28 +1,22 @@
 {
   "name": "frnkln-stage",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "FRNKLN STAGE - gerenciamento de repertórios musicais, bandas, letras, cifras e setlists",
+  "main": "server/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node tests/acceptance.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/danielnasfran-tech/FRNKLN-STAGE.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/danielnasfran-tech/FRNKLN-STAGE/issues"
-  },
-  "homepage": "https://github.com/danielnasfran-tech/FRNKLN-STAGE#readme",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.11.1",
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.4.1",
     "cookie-parser": "^1.4.7",
-    "express": "^5.3.0",
-    "jsonwebtoken": "^9.0.3"
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
