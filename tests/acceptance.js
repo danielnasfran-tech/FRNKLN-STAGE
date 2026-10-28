@@ -85,7 +85,7 @@ async function waitForServer(timeoutMs = 20000) {
 }
 
 (async function main() {
-  const server = startServer();
+  let server = startServer();
   try {
     const up = await waitForServer();
     if (!up) throw new Error('servidor não respondeu a tempo');
@@ -405,23 +405,27 @@ async function waitForServer(timeoutMs = 20000) {
     });
 
     console.log('\n== Conectividade / falha de rede (Teste F) ==');
-    const conn = await net.connect(PORT, '127.0.0.1');
-    conn.destroy();
+    server.kill('SIGTERM');
+    await new Promise((r) => setTimeout(r, 500));
     const down = await req('GET', '/api/state', { token: tokenA }).catch(() => ({ status: 0 }));
-    check('servidor fora do ar reporta falha (sem JSON válido)', () => {
-      assert.ok(down.status === 0 || down.status >= 500);
+    check('servidor fora do ar falha de rede (sem resposta invalida)', () => {
+      assert.strictEqual(down.status, 0);
     });
-    const server2 = startServer();
+    server = startServer();
     const up2 = await waitForServer();
-    check('servidor volta a responder após reinício', () => {
+    check('servidor volta a responder apos reinicio', () => {
       assert.ok(up2);
     });
     const afterRestart = await req('GET', '/api/songs', { token: tokenA });
-    check('dados sobrevivem ao reinício do servidor (persistência real)', () => {
+    check('dados sobrevivem ao reinicio do servidor (persistencia real)', () => {
       assert.strictEqual(afterRestart.status, 200);
       assert.strictEqual(afterRestart.data.length, 3);
     });
-    server2.kill('SIGTERM');
+    const afterRestartBand = await req('GET', '/api/bands', { token: tokenA });
+    check('bandas e logos sobrevivem ao reinicio', () => {
+      assert.strictEqual(afterRestartBand.data.length, 1);
+      assert.strictEqual(afterRestartBand.data[0].logo, 'data:image/png;base64,AAA');
+    });
 
     console.log('\n== Estáticos e PWA ==');
     const home = await fetch(BASE + '/');
