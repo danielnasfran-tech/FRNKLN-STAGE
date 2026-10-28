@@ -101,33 +101,53 @@ router.get('/auth/me', requireAuth, (req, res) => {
 /* Snapshot + sincronização                                            */
 /* ------------------------------------------------------------------ */
 
+/**
+ * `nullable` marca as colunas que aceitam NULL (FKs opcionais e duration).
+ * As demais colunas são NOT NULL e recebem string vazia quando ausentes.
+ */
 const ENTITY_CONFIG = {
   bands: {
     table: 'bands',
     fields: ['name', 'description', 'logo'],
+    nullable: [],
     order: 'name COLLATE NOCASE ASC',
   },
   songs: {
     table: 'songs',
     fields: ['title', 'artist', 'band_id', 'lyrics', 'chords', 'key', 'capo', 'bpm', 'meter', 'notes', 'duration'],
+    nullable: ['band_id', 'duration'],
     order: 'title COLLATE NOCASE ASC',
   },
   band_songs: {
     table: 'band_songs',
     fields: ['band_id', 'song_id'],
+    nullable: [],
     order: 'created_at ASC',
   },
   setlists: {
     table: 'setlists',
     fields: ['name', 'description', 'band_id', 'notes'],
+    nullable: ['band_id'],
     order: 'updated_at DESC',
   },
   setlist_songs: {
     table: 'setlist_songs',
     fields: ['setlist_id', 'song_id', 'position', 'notes'],
+    nullable: [],
     order: 'setlist_id ASC, position ASC',
   },
 };
+
+function fieldValue(field, raw, nullable) {
+  if (raw === undefined || raw === null || raw === '') {
+    return nullable.includes(field) ? null : '';
+  }
+  if (field === 'position') {
+    const n = Number(raw);
+    return Number.isFinite(n) ? Math.trunc(n) : 0;
+  }
+  return clean(raw, field === 'logo' ? 300000 : 20000);
+}
 
 function readEntity(table, row) {
   return {
